@@ -24,6 +24,8 @@ function App() {
       .sort(() => Math.random() - 0.5)
       .map((card) => ({ ...card, id: Math.random() }));
 
+    setChoiceOne(null);  
+    setChoiceTwo(null);  
     setCards(shuffledCards);
     setTurns(0);
   };
@@ -41,14 +43,13 @@ function App() {
       if (choiceOne.src === choiceTwo.src) {
         setCards((prevCards) => {
           return prevCards.map((card) => {
-            if(card.src === choiceOne.src){
-              return {...card, matched: true }
-            }
-            else{
+            if (card.src === choiceOne.src) {
+              return { ...card, matched: true };
+            } else {
               return card;
             }
-          })
-        } )
+          });
+        });
         resetChoice();
       } else {
         setTimeout(() => resetChoice(), 1000);
@@ -65,6 +66,12 @@ function App() {
     setTurns((prevTurn) => (prevTurn += 1));
     setDisabled(false);
   };
+
+  // start a new game automatically
+  useEffect(() => {
+    shuffleCards();
+  }, []);
+
   return (
     <>
       <div className="App">
@@ -82,6 +89,7 @@ function App() {
             />
           ))}
         </div>
+        <h2>Turns Attempted: {turns}</h2>
       </div>
     </>
   );
