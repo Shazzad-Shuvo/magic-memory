@@ -1,14 +1,16 @@
 import "./SingleCard.css";
 
-const singleCard = ({ card, handleChoice }) => {
+const singleCard = ({ card, handleChoice, flipped, disabled }) => {
 
   const handleClick = () =>{
-    handleChoice(card);
+    if(!disabled){
+      handleChoice(card);
+    }
     
   }
 
   return (
-    <div>
+    <div className={flipped ? "flipped" : ""}>
       <div className="card">
         <div>
           <img className="front" src={card.src} alt="card front" />

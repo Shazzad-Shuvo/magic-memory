@@ -3,12 +3,12 @@ import "./App.css";
 import SingleCard from "./components/SingleCard/SingleCard";
 
 const cardImages = [
-  { src: "../public/img/helmet-1.png" },
-  { src: "../public/img/potion-1.png" },
-  { src: "../public/img/ring-1.png" },
-  { src: "../public/img/scroll-1.png" },
-  { src: "../public/img/shield-1.png" },
-  { src: "../public/img/sword-1.png" },
+  { src: "../img/helmet-1.png", matched: false },
+  { src: "../img/potion-1.png", matched: false },
+  { src: "../img/ring-1.png", matched: false },
+  { src: "../img/scroll-1.png", matched: false },
+  { src: "../img/shield-1.png", matched: false },
+  { src: "../img/sword-1.png", matched: false },
 ];
 
 function App() {
@@ -16,6 +16,7 @@ function App() {
   const [turns, setTurns] = useState(0);
   const [choiceOne, setChoiceOne] = useState(null);
   const [choiceTwo, setChoiceTwo] = useState(null);
+  const [disabled, setDisabled] = useState(false);
 
   // shuffleCards
   const shuffleCards = () => {
@@ -35,21 +36,34 @@ function App() {
   // compare choices
   useEffect(() => {
     if (choiceOne && choiceTwo) {
+      setDisabled(true);
+
       if (choiceOne.src === choiceTwo.src) {
-        console.log("Images matched");
+        setCards((prevCards) => {
+          return prevCards.map((card) => {
+            if(card.src === choiceOne.src){
+              return {...card, matched: true }
+            }
+            else{
+              return card;
+            }
+          })
+        } )
         resetChoice();
       } else {
-        console.log("Images did not match");
-        resetChoice();
+        setTimeout(() => resetChoice(), 1000);
       }
     }
   }, [choiceOne, choiceTwo]);
+
+  console.log(cards);
 
   // reset choice and increase turn
   const resetChoice = () => {
     setChoiceOne(null);
     setChoiceTwo(null);
     setTurns((prevTurn) => (prevTurn += 1));
+    setDisabled(false);
   };
   return (
     <>
@@ -63,6 +77,8 @@ function App() {
               key={card.id}
               card={card}
               handleChoice={handleChoice}
+              flipped={card === choiceOne || card === choiceTwo || card.matched}
+              disabled={disabled}
             />
           ))}
         </div>
